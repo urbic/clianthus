@@ -22,6 +22,7 @@ jobs:
           sudo apt-get install -y \
             ant{,-optional} \
             ivy \
+			junit \
             openjdk-17-{jdk-headless,doc}
       - name: Setup
         run: |
@@ -30,7 +31,7 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
         run: |
-          ant -lib /usr/share/java/xercesImpl.jar:/usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
+          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
             -v -noinput -Dlinux.flavour=debian build
       - name: Test
         env:
