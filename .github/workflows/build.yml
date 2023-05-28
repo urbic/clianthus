@@ -18,7 +18,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
+		  sudo echo 'deb http://deb.debian.org/debian sid main' >>/etc/apt/sources.list
           sudo apt-get update
+          sudo apt-get full-upgrade
           sudo apt-get install -y \
             ant{,-optional} \
             ivy \
@@ -31,13 +33,13 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
         run: |
-          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
+          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit-jupiter-api.jar \
             -v -noinput -Dlinux.flavour=debian build
       - name: Test
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
         run: |
-          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
+          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit-jupiter-api.jar \
             -v -noinput -Dlinux.flavour=debian test
       - name: Deploy site
         uses: JamesIves/github-pages-deploy-action@3.6.2
