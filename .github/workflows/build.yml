@@ -1,0 +1,42 @@
+---
+
+name: Java CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y \
+            ant{,-optional} \
+            ivy \
+            openjdk-17-{jdk-headless,doc}
+      - name: Setup
+        run: |
+          git config tar.tar.xz.command 'xz -9'
+      - name: Build
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+        run: |
+          ant -lib /usr/share/java/xercesImpl.jar:/usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
+            -v -noinput -Dlinux.flavour=debian build
+      - name: Test
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+        run: |
+          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
+            -v -noinput -Dlinux.flavour=debian test
+      - name: Deploy site
+        uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: target/doc
