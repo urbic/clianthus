@@ -39,7 +39,7 @@ jobs:
           ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit4.jar \
             -v -noinput -Dlinux.flavour=debian test
       - name: Deploy site
-        uses: JamesIves/github-pages-deploy-action@4.4.2
+        uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
           BRANCH: gh-pages
           FOLDER: target/doc
