@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.i18n;
 
 public class Messages
 {

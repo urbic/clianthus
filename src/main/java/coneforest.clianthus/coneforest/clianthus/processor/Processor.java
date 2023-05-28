@@ -1,6 +1,7 @@
-package coneforest.clianthus;
+package coneforest.clianthus.processor;
 
 import java.io.*;
+import coneforest.clianthus.i18n.Messages;
 import coneforest.clianthus.option.Option;
 import coneforest.clianthus.option.OptionWithArg;
 import coneforest.clianthus.option.OptionWithoutArg;

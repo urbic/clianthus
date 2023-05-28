@@ -11,6 +11,7 @@
 	<property name="src.main.java" location="${src.main}/java"/>
 	<property name="src.main.resources" location="${src.main}/resources"/>
 	<property name="src.test" location="${src}/test"/>
+	<property name="src.test.java" location="${src.test}/java"/>
 	<property name="src.maven" location="${src}/maven"/>
 	<property name="target" location="target"/>
 	<property name="target.classes" location="${target}/classes"/>
@@ -22,8 +23,9 @@
 	<property name="target.doc.apidocs" location="${target.doc}/apidocs"/>
 	<property name="target.src.main" location="${target.src}/main"/>
 	<property name="target.src.main.java" location="${target.src.main}/java"/>
-	<property name="target.test" value="${target}/test"/>
-	<property name="target.obs" value="${target}/obs"/>
+	<property name="target.test" location="${target}/test"/>
+	<property name="target.testreports" location="${target}/testreports"/>
+	<property name="target.obs" location="${target}/obs"/>
 	<property name="datadir" location="/usr/share"/>
 	<property name="datadir.java" location="${datadir}/java"/>
 	<property name="datadir.javadoc" location="${datadir}/javadoc"/>
@@ -40,6 +42,21 @@
 		<pathelement path="${src.main.java}"/>
 	</path>
 
+	<path id="modulepath.main">
+		<path refid="modulepath.main.resolved"/>
+		<pathelement path="${target.classes}/${project.maven.groupId}"/>
+	</path>
+
+	<path id="modulesourcepath.test">
+		<pathelement path="${src.test.java}"/>
+	</path>
+
+	<target name="resolve" description="Retrieve dependencies with Ivy">
+		<ivy:resolve conf="compile"/>
+		<ivy:cachepath pathid="modulepath.main.resolved" conf="compile"/>
+	</target>
+
+
 	<!--path id="classpath.main">
 		<pathelement path="${target.lib}/${project.name}.jar"/>
 	</path-->
@@ -51,16 +68,19 @@
 
 	<target name="compile.java"
 			description="Compile Java sources"
+			depends="resolve"
 			>
 		<mkdir dir="${target.classes}/${project.maven.groupId}"/>
 		<javac
-			modulesourcepathref="modulesourcepath.main"
 			destdir="${target.classes}"
 			release="11"
 			includeantruntime="false"
 			encoding="UTF-8"
 			createMissingPackageInfoClass="false"
 			>
+			<modulesourcepath refid="modulesourcepath.main"/>
+			<modulesourcepath refid="modulesourcepath.test"/>
+			<modulepath refid="modulepath.main"/>
 			<!-- modulepathref="modulepath.main" -->
 			<!--compilerarg value="-Xlint"/-->
 			<!--compilerarg value="-Xdoclint"/-->
@@ -117,6 +137,7 @@
 		<jar
 			jarfile="${target.lib}/${project.maven.groupId}-${project.version}.jar"
 			basedir="${target.classes}/${project.maven.groupId}"
+			excludes="**/test/"
 			>
 		</jar>
 		<symlink
@@ -184,8 +205,18 @@
 		</exec>
 	</target>
 
-	<target name="test" depends="jar">
-		<!-- TODO -->
+	<target name="test" depends="compile.java">
+		<mkdir dir="${target.testreports}"/>
+		<junitlauncher haltOnFailure="true" printSummary="true">
+			<classpath refid="modulepath.main"/>
+			<testclasses outputdir="${target.testreports}">
+				<fileset dir="${target.classes}/${project.maven.groupId}">
+					<include name="**/Test*.class"/>
+				</fileset>
+				<listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+				<listener type="legacy-plain" sendSysOut="true" />
+            </testclasses>
+        </junitlauncher>
 	</target>
 
 </project>

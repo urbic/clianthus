@@ -1,6 +1,6 @@
 package coneforest.clianthus.option;
 
-import coneforest.clianthus.ProcessingException;
+import coneforest.clianthus.processor.ProcessingException;
 
 /**
 *	An abstract option holding an object.

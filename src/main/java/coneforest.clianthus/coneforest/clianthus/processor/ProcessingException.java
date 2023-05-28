@@ -1,4 +1,6 @@
-package coneforest.clianthus;
+package coneforest.clianthus.processor;
+
+import coneforest.clianthus.i18n.Messages;
 
 /**
 *	Thrown when error occured during options processing.

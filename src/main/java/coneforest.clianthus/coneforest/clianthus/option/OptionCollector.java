@@ -1,7 +1,7 @@
 package coneforest.clianthus.option;
 
-import coneforest.clianthus.Messages;
-import coneforest.clianthus.ProcessingException;
+import coneforest.clianthus.i18n.Messages;
+import coneforest.clianthus.processor.ProcessingException;
 
 /**
 *	An abstract option holding a list of objects.
