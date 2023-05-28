@@ -1,4 +1,7 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
+
+import coneforest.clianthus.Messages;
+import coneforest.clianthus.ProcessingException;
 
 /**
 *	An option holding a list of {@link Float} values.

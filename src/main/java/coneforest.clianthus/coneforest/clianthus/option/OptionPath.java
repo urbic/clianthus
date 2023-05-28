@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
 public class OptionPath
 	extends OptionHolder<String[]>

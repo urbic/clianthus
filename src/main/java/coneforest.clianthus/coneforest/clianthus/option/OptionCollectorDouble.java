@@ -1,17 +1,19 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
+
+import coneforest.clianthus.Messages;
+import coneforest.clianthus.ProcessingException;
 
 /**
-*	An option holding a {@link Double} value.
+*	An option holding a list of {@link Double} values.
 */
-public class OptionDouble
-	extends OptionHolder<Double>
+public class OptionCollectorDouble extends OptionCollector<Double>
 {
 	/**
 	*	Creates new option with given names.
 	*
 	*	@param names space-delimited names.
 	*/
-	public OptionDouble(final String names)
+	public OptionCollectorDouble(final String names)
 	{
 		super(names);
 	}

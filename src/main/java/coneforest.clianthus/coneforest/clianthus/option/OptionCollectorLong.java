@@ -1,16 +1,19 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
+
+import coneforest.clianthus.Messages;
+import coneforest.clianthus.ProcessingException;
 
 /**
-*	An option holding a {@link Long} value.
+*	An option holding a list of {@link Long} values.
 */
-public class OptionLong extends OptionHolder<Long>
+public class OptionCollectorLong extends OptionCollector<Long>
 {
 	/**
 	*	Creates new option with given names.
 	*
 	*	@param names space-delimited names.
 	*/
-	public OptionLong(final String names)
+	public OptionCollectorLong(final String names)
 	{
 		super(names);
 	}

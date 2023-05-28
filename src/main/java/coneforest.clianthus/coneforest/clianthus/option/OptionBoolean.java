@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
 /**
 *	An option holding a {@link Boolean} value.

@@ -16,4 +16,8 @@
 *
 *	@author Anton Shvetz
 */
-package coneforest.clianthus;
+module coneforest.clianthus
+{
+	exports coneforest.clianthus;
+	exports coneforest.clianthus.option;
+}

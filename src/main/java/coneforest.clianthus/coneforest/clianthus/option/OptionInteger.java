@@ -1,7 +1,18 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
+import coneforest.clianthus.Messages;
+import coneforest.clianthus.ProcessingException;
+
+/**
+*	An option holding a {@link Integer} value.
+*/
 public class OptionInteger extends OptionHolder<Integer>
 {
+	/**
+	*	Creates new option with given names.
+	*
+	*	@param names space-delimited names.
+	*/
 	public OptionInteger(final String names)
 	{
 		super(names);

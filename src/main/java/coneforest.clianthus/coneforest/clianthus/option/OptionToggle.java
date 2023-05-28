@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
 /**
 *	A toggle option. Boolean option value, initially false, toggles every time

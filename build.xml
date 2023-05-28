@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="clianthus" default="jar">
+<project
+	name="clianthus"
+	default="jar"
+	xmlns:ivy="antlib:org.apache.ivy.ant"
+	>
 
-	<property name="project.name" value="${ant.project.name}"/>
-	<property name="project.version" value="0.0"/>
 	<property name="src" location="src"/>
+	<property name="src.ant" location="${src}/ant"/>
 	<property name="src.main" location="${src}/main"/>
 	<property name="src.main.java" location="${src.main}/java"/>
 	<property name="src.main.resources" location="${src.main}/resources"/>
 	<property name="src.test" location="${src}/test"/>
+	<property name="src.maven" location="${src}/maven"/>
 	<property name="target" location="target"/>
 	<property name="target.classes" location="${target}/classes"/>
 	<property name="target.lib" location="${target}/lib"/>
@@ -24,9 +28,21 @@
 	<property name="datadir.java" location="${datadir}/java"/>
 	<property name="datadir.javadoc" location="${datadir}/javadoc"/>
 	<property name="datadir.javadoc.java" location="${datadir.javadoc}/java"/>
-	<path id="classpath.main">
-		<pathelement path="${target.lib}/${project.name}.jar"/>
+
+	<property file="${src.ant}/config.properties"/>
+	<!-- property file="${src.ant}/config-${linux.flavour}.properties"/-->
+
+	<!-- path id="modulepath.main">
+		<pathelement path="${target.classes}"/>
+	</path -->
+
+	<path id="modulesourcepath.main">
+		<pathelement path="${src.main.java}"/>
 	</path>
+
+	<!--path id="classpath.main">
+		<pathelement path="${target.lib}/${project.name}.jar"/>
+	</path-->
 
 	<target name="compile"
 		description="Compile sources"
@@ -36,18 +52,19 @@
 	<target name="compile.java"
 			description="Compile Java sources"
 			>
-		<mkdir dir="${target.classes}"/>
+		<mkdir dir="${target.classes}/${project.maven.groupId}"/>
 		<javac
-			srcdir="${src.main.java}"
+			modulesourcepathref="modulesourcepath.main"
 			destdir="${target.classes}"
-			source="11"
-			target="11"
+			release="11"
 			includeantruntime="false"
 			encoding="UTF-8"
+			createMissingPackageInfoClass="false"
 			>
+			<!-- modulepathref="modulepath.main" -->
 			<!--compilerarg value="-Xlint"/-->
 			<!--compilerarg value="-Xdoclint"/-->
-			<classpath refid="classpath.main"/>
+			<!--compilerarg value="-Xpkginfo:always"/-->
 			<compilerarg value="-Xdiags:verbose"/>
 		</javac>
 	</target>
@@ -56,52 +73,86 @@
 		<copy todir="${target.classes}">
 			<fileset dir="${src.main.resources}" includes="**"/>
 		</copy>
+		<mkdir
+            dir="${target.classes}/${project.maven.groupId}/META-INF/licenses"
+            />
+		<copy
+			todir="${target.classes}/${project.maven.groupId}/META-INF/licenses"
+			file="LICENSE"
+			/>
+		<mkdir
+            dir="${target.classes}/${project.maven.groupId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}"
+            />
+        <echoproperties
+            destfile="${target.classes}/${project.maven.groupId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}/pom.properties"
+            >
+            <propertyset>
+				<propertyref prefix="project.maven."/>
+				<mapper type="glob" from="project.maven.*" to="*"/>
+			</propertyset>
+		</echoproperties>
+	</target>
+
+	<target name="pom"
+		description="Generate POM"
+		>
+		<mkdir dir="${target.lib}"/>
+		<ivy:makepom
+			ivyfile="ivy.xml"
+			templatefile="${src.maven}/${project.maven.groupId}.pom"
+			pomfile="${target.lib}/${project.maven.groupId}-${project.version}.pom"
+			>                                  
+			<ivy:mapping conf="default" scope="compile"/>
+		</ivy:makepom>
+		<symlink
+			resource="${project.maven.groupId}-${project.version}.pom"
+			link="${target.lib}/${project.maven.groupId}.pom"
+			overwrite="true"
+			/>
 	</target>
 
 	<target name="jar"
 		description="Build Jar"
 		depends="compile,copy.resources">
 		<jar
-			jarfile="${target.lib}/${project.name}-${project.version}.jar"
-			basedir="${target.classes}"
+			jarfile="${target.lib}/${project.maven.groupId}-${project.version}.jar"
+			basedir="${target.classes}/${project.maven.groupId}"
 			>
 		</jar>
 		<symlink
-			resource="${project.name}-${project.version}.jar"
-			link="${target.lib}/${project.name}.jar"
+			resource="${project.maven.groupId}-${project.version}.jar"
+			link="${target.lib}/${project.maven.groupId}.jar"
 			overwrite="true"
 			/>
 	</target>
 
 	<target name="build"
 		description="Build project"
-		depends="jar,docs,apidocs"
-		>
-		<copy todir="${target.doc}">
-			<fileset dir="." includes="README LICENSE AUTHORS"/>
-		</copy>
-	</target>
+		depends="jar,pom,docs"
+		/>
 
 	<target name="clean" description="Clean build directory">
 		<delete dir="${target}"/>
 	</target>
 
 	<target name="docs"
-		>
-	</target>
+		description="Build documentation"
+		depends="apidocs"
+		/>
+
 	<target name="apidocs"
 		description="Build API documentation"
 		depends="jar"
 		>
 		<javadoc
-				sourcepath="${src.main.java}:${target.src.main.java}"
+				modulesourcepathref="modulesourcepath.main"
 				destdir="${target.doc.apidocs}"
 				access="public"
 				encoding="UTF-8"
 				charset="UTF-8"
 				windowtitle="${project.name} ${project.version}"
 				>
-			<classpath refid="classpath.main"/>
+			<module name="coneforest.${project.name}"/>
 			<arg value="-Xdoclint:missing,reference"/>
 			<link href="file://${datadir.javadoc.java}"/>
 		</javadoc>
@@ -134,12 +185,7 @@
 	</target>
 
 	<target name="test" depends="jar">
-		<java
-			jar="${target.lib}/${project.name}.jar"
-			fork="true"
-			>
-			<arg value="/home/tz/work/software/scala"/>
-		</java>
+		<!-- TODO -->
 	</target>
 
 </project>

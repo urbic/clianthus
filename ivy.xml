@@ -1,0 +1,36 @@
+<ivy-module version="2.0">
+
+	<info
+		organisation="${project.maven.groupId}"
+		module="${project.maven.artifactId}"
+		revision="${project.version}"
+		>
+		<license name="${project.license.name}" url="${project.license.url}"/>
+		<repository name="github" url="${project.scm.connection}"/>
+		<description homepage="${project.url}">${project.description}</description>
+	</info>
+
+	<configurations defaultconfmapping="*->default">
+		<conf name="compile"/>
+	</configurations>
+
+	<dependencies>
+		<!--dependency
+			org="org.junit.vintage"
+			name="junit-vintage-engine"
+			rev="[5.3.2,)"
+			transitive="false"
+			conf="compile"
+			/-->
+		<!--dependency
+			org="org.apache.ant"
+			name="ant-junit"
+			rev="1.10.13"
+			conf="compile"
+			>
+			<exclude org="org.apache.ant" name="ant-launcher"/>
+		</dependency-->
+		<exclude org="org.hamcrest"/>
+	</dependencies>
+
+</ivy-module>

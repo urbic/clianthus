@@ -1,5 +1,9 @@
 package coneforest.clianthus;
+
 import java.io.*;
+import coneforest.clianthus.option.Option;
+import coneforest.clianthus.option.OptionWithArg;
+import coneforest.clianthus.option.OptionWithoutArg;
 
 /**
 *	Options processor.

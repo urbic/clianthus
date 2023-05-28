@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
 /**
 *	A flag option. Boolean option value, initially false, set to true every

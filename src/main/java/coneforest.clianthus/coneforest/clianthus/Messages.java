@@ -17,5 +17,5 @@ public class Messages
 	}
 
 	private static final java.util.ResourceBundle messages
-		=java.util.ResourceBundle.getBundle("coneforest.clianthus.Messages");
+		=java.util.ResourceBundle.getBundle(Messages.class.getName());
 }

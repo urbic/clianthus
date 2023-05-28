@@ -1,4 +1,4 @@
-package coneforest.clianthus;
+package coneforest.clianthus.option;
 
 /**
 *	A counter option. Integer option value, initially zero, increments every
