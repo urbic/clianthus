@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="clianthus" default="jar">
+
+	<property name="project.name" value="${ant.project.name}"/>
+	<property name="project.version" value="0.0"/>
+	<property name="src" location="src"/>
+	<property name="src.main" location="${src}/main"/>
+	<property name="src.main.java" location="${src.main}/java"/>
+	<property name="src.main.resources" location="${src.main}/resources"/>
+	<property name="src.test" location="${src}/test"/>
+	<property name="target" location="target"/>
+	<property name="target.classes" location="${target}/classes"/>
+	<property name="target.lib" location="${target}/lib"/>
+	<property name="target.src" location="${target}/src"/>
+	<property name="target.src.test" location="${target.src}/test"/>
+	<property name="target.src.test.java" location="${target.src.test}/java"/>
+	<property name="target.doc" location="${target}/doc"/>
+	<property name="target.doc.apidocs" location="${target.doc}/apidocs"/>
+	<property name="target.src.main" location="${target.src}/main"/>
+	<property name="target.src.main.java" location="${target.src.main}/java"/>
+	<property name="target.test" value="${target}/test"/>
+	<property name="target.obs" value="${target}/obs"/>
+	<property name="datadir" location="/usr/share"/>
+	<property name="datadir.java" location="${datadir}/java"/>
+	<property name="datadir.javadoc" location="${datadir}/javadoc"/>
+	<property name="datadir.javadoc.java" location="${datadir.javadoc}/java"/>
+	<path id="classpath.main">
+		<pathelement path="${target.lib}/${project.name}.jar"/>
+	</path>
+
+	<target name="compile"
+		description="Compile sources"
+		depends="compile.java"
+		/>
+
+	<target name="compile.java"
+			description="Compile Java sources"
+			>
+		<mkdir dir="${target.classes}"/>
+		<javac
+			srcdir="${src.main.java}"
+			destdir="${target.classes}"
+			source="11"
+			target="11"
+			includeantruntime="false"
+			encoding="UTF-8"
+			>
+			<!--compilerarg value="-Xlint"/-->
+			<!--compilerarg value="-Xdoclint"/-->
+			<classpath refid="classpath.main"/>
+			<compilerarg value="-Xdiags:verbose"/>
+		</javac>
+	</target>
+
+	<target name="copy.resources">
+		<copy todir="${target.classes}">
+			<fileset dir="${src.main.resources}" includes="**"/>
+		</copy>
+	</target>
+
+	<target name="jar"
+		description="Build Jar"
+		depends="compile,copy.resources">
+		<jar
+			jarfile="${target.lib}/${project.name}-${project.version}.jar"
+			basedir="${target.classes}"
+			>
+		</jar>
+		<symlink
+			resource="${project.name}-${project.version}.jar"
+			link="${target.lib}/${project.name}.jar"
+			overwrite="true"
+			/>
+	</target>
+
+	<target name="build"
+		description="Build project"
+		depends="jar,docs,apidocs"
+		>
+		<copy todir="${target.doc}">
+			<fileset dir="." includes="README LICENSE AUTHORS"/>
+		</copy>
+	</target>
+
+	<target name="clean" description="Clean build directory">
+		<delete dir="${target}"/>
+	</target>
+
+	<target name="docs"
+		>
+	</target>
+	<target name="apidocs"
+		description="Build API documentation"
+		depends="jar"
+		>
+		<javadoc
+				sourcepath="${src.main.java}:${target.src.main.java}"
+				destdir="${target.doc.apidocs}"
+				access="public"
+				encoding="UTF-8"
+				charset="UTF-8"
+				windowtitle="${project.name} ${project.version}"
+				>
+			<classpath refid="classpath.main"/>
+			<arg value="-Xdoclint:missing,reference"/>
+			<link href="file://${datadir.javadoc.java}"/>
+		</javadoc>
+	</target>
+	
+	<target name="dist.tar" description="Make Tar distribution">
+		<exec outputproperty="git.stashname" executable="git">
+			<arg value="stash"/>
+			<arg value="create"/>
+		</exec>
+		<condition property="git.object" value="HEAD" else="${git.stashname}">
+			<length string="${git.stashname}" when="eq" length="0"/>
+		</condition>
+		<echo message="${git.object}"/>
+		<exec executable="git">
+			<arg value="archive"/>
+			<arg value="--prefix"/>
+			<arg value="${project.name}-${project.version}/"/>
+			<arg value="--output"/>
+			<arg value="${target}/${project.name}-${project.version}.tar.gz"/>
+			<arg value="${git.object}"/>
+			<arg value="--"/>
+			<arg value="build.xml"/>
+			<arg value="src"/>
+			<arg value="README"/>
+			<arg value="README.md"/>
+			<arg value="LICENSE"/>
+			<arg value="AUTHORS"/>
+		</exec>
+	</target>
+
+	<target name="test" depends="jar">
+		<java
+			jar="${target.lib}/${project.name}.jar"
+			fork="true"
+			>
+			<arg value="/home/tz/work/software/scala"/>
+		</java>
+	</target>
+
+</project>
