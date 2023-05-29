@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"coneforest.clianthus","l":"coneforest.clianthus"},{"m":"coneforest.clianthus","l":"coneforest.clianthus.option"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"coneforest.clianthus","l":"coneforest.clianthus.option"},{"m":"coneforest.clianthus","l":"coneforest.clianthus.processor"}];updateSearchResults();
