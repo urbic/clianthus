@@ -56,7 +56,6 @@
 		<ivy:cachepath pathid="modulepath.main.resolved" conf="compile"/>
 	</target>
 
-
 	<!--path id="classpath.main">
 		<pathelement path="${target.lib}/${project.name}.jar"/>
 	</path-->
@@ -174,6 +173,7 @@
 				windowtitle="${project.name} ${project.version}"
 				>
 			<module name="coneforest.${project.name}"/>
+			<modulepath refid="modulepath.main"/>
 			<arg value="-Xdoclint:missing,reference"/>
 			<link href="file://${datadir.javadoc.java}"/>
 		</javadoc>
