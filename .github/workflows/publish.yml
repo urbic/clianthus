@@ -32,4 +32,5 @@ jobs:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ant deploy
+          ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit-jupiter-api.jar \
+            -v -noinput -Dlinux.flavour=debian deploy
