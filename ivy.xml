@@ -1,4 +1,5 @@
-<ivy-module version="2.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
 
 	<info
 		organisation="${project.maven.groupId}"
@@ -13,6 +14,11 @@
 	<configurations defaultconfmapping="*->default">
 		<conf name="compile"/>
 	</configurations>
+
+	<publications>
+		<artifact name="${project.maven.artifactId}" type="jar"/>
+		<artifact name="${project.maven.artifactId}" type="pom"/>
+	</publications>
 
 	<dependencies>
 		<dependency

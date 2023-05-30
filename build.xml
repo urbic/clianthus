@@ -25,6 +25,7 @@
 	<property name="target.src.main.java" location="${target.src.main}/java"/>
 	<property name="target.test" location="${target}/test"/>
 	<property name="target.testreports" location="${target}/testreports"/>
+	<property name="target.artifacts" location="${target}/artifacts"/>
 	<property name="target.obs" location="${target}/obs"/>
 	<property name="datadir" location="/usr/share"/>
 	<property name="datadir.java" location="${datadir}/java"/>
@@ -34,17 +35,13 @@
 	<property file="${src.ant}/config.properties"/>
 	<!-- property file="${src.ant}/config-${linux.flavour}.properties"/-->
 
-	<!-- path id="modulepath.main">
-		<pathelement path="${target.classes}"/>
-	</path -->
-
 	<path id="modulesourcepath.main">
 		<pathelement path="${src.main.java}"/>
 	</path>
 
 	<path id="modulepath.main">
 		<path refid="modulepath.main.resolved"/>
-		<pathelement path="${target.classes}/${project.maven.groupId}"/>
+		<pathelement path="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"/>
 	</path>
 
 	<path id="modulesourcepath.test">
@@ -56,10 +53,6 @@
 		<ivy:cachepath pathid="modulepath.main.resolved" conf="compile"/>
 	</target>
 
-	<!--path id="classpath.main">
-		<pathelement path="${target.lib}/${project.name}.jar"/>
-	</path-->
-
 	<target name="compile"
 		description="Compile sources"
 		depends="compile.java"
@@ -69,7 +62,8 @@
 			description="Compile Java sources"
 			depends="resolve"
 			>
-		<mkdir dir="${target.classes}/${project.maven.groupId}"/>
+		<mkdir
+		dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"/>
 		<javac
 			destdir="${target.classes}"
 			release="11"
@@ -93,17 +87,17 @@
 			<fileset dir="${src.main.resources}" includes="**"/>
 		</copy>
 		<mkdir
-            dir="${target.classes}/${project.maven.groupId}/META-INF/licenses"
+            dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/licenses"
             />
 		<copy
-			todir="${target.classes}/${project.maven.groupId}/META-INF/licenses"
+			todir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/licenses"
 			file="LICENSE"
 			/>
 		<mkdir
-            dir="${target.classes}/${project.maven.groupId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}"
+            dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}"
             />
         <echoproperties
-            destfile="${target.classes}/${project.maven.groupId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}/pom.properties"
+            destfile="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}/pom.properties"
             >
             <propertyset>
 				<propertyref prefix="project.maven."/>
@@ -118,32 +112,22 @@
 		<mkdir dir="${target.lib}"/>
 		<ivy:makepom
 			ivyfile="ivy.xml"
-			templatefile="${src.maven}/${project.maven.groupId}.pom"
-			pomfile="${target.lib}/${project.maven.groupId}-${project.version}.pom"
+			templatefile="${src.maven}/${project.maven.groupId}.${project.maven.artifactId}.pom"
+			pomfile="${target.lib}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.pom"
 			>                                  
 			<ivy:mapping conf="default" scope="compile"/>
 		</ivy:makepom>
-		<symlink
-			resource="${project.maven.groupId}-${project.version}.pom"
-			link="${target.lib}/${project.maven.groupId}.pom"
-			overwrite="true"
-			/>
 	</target>
 
 	<target name="jar"
 		description="Build Jar"
 		depends="compile,copy.resources">
 		<jar
-			jarfile="${target.lib}/${project.maven.groupId}-${project.version}.jar"
-			basedir="${target.classes}/${project.maven.groupId}"
+			jarfile="${target.lib}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"
+			basedir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"
 			excludes="**/test/"
 			>
 		</jar>
-		<symlink
-			resource="${project.maven.groupId}-${project.version}.jar"
-			link="${target.lib}/${project.maven.groupId}.jar"
-			overwrite="true"
-			/>
 	</target>
 
 	<target name="build"
@@ -210,13 +194,33 @@
 		<junitlauncher haltOnFailure="true" printSummary="true">
 			<classpath refid="modulepath.main"/>
 			<testclasses outputdir="${target.testreports}">
-				<fileset dir="${target.classes}/${project.maven.groupId}">
+				<fileset dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}">
 					<include name="**/Test*.class"/>
 				</fileset>
 				<listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
 				<listener type="legacy-plain" sendSysOut="true" />
             </testclasses>
         </junitlauncher>
+	</target>
+
+	<target name="artifacts" depends="jar,pom">
+		<mkdir dir="${target.artifacts}/jar"/>
+		<copy todir="${target.artifacts}/jar">
+			<fileset dir="${target.lib}" includes="*.jar"/>
+		</copy>
+		<mkdir dir="${target.artifacts}/pom"/>
+		<copy todir="${target.artifacts}/pom">
+			<fileset dir="${target.lib}" includes="*.pom"/>
+		</copy>
+	</target>
+
+	<target name="deploy" depends="artifacts">
+		<ivy:publish
+			resolver="github-packages"
+			overwrite="true"
+			forcedeliver="true"
+			artifactspattern="${target.artifacts}/[type]/[organisation].[artifact]-[revision].[ext]"
+			/>
 	</target>
 
 </project>

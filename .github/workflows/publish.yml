@@ -1,0 +1,34 @@
+---
+
+name: Java CI
+
+on:
+  push:
+    branches: [master]
+    tags:
+      - v**
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ant{,-optional} \
+            ivy \
+            junit \
+            openjdk-17-{jdk-headless,doc}
+      - name: Setup
+        run: |
+          git config tar.tar.xz.command 'xz -9'
+      - name: Deploy package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ant deploy
