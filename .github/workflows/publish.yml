@@ -1,6 +1,6 @@
 ---
 
-name: Java CI
+name: Publish package
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
