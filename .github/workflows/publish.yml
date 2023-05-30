@@ -29,6 +29,7 @@ jobs:
           git config tar.tar.xz.command 'xz -9'
       - name: Deploy package
         env:
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ant deploy
