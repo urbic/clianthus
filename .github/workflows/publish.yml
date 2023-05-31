@@ -33,4 +33,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ant -lib /usr/share/java/ivy.jar:/usr/share/java/junit-jupiter-api.jar \
-            -v -noinput -Dlinux.flavour=debian deploy
+            -v -noinput deploy

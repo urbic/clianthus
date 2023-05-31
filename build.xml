@@ -26,6 +26,8 @@
 	<property name="target.test" location="${target}/test"/>
 	<property name="target.testreports" location="${target}/testreports"/>
 	<property name="target.artifacts" location="${target}/artifacts"/>
+	<property name="target.artifacts.jar" location="${target.artifacts}/jar"/>
+	<property name="target.artifacts.pom" location="${target.artifacts}/pom"/>
 	<property name="target.obs" location="${target}/obs"/>
 	<property name="datadir" location="/usr/share"/>
 	<property name="datadir.java" location="${datadir}/java"/>
@@ -33,7 +35,6 @@
 	<property name="datadir.javadoc.java" location="${datadir.javadoc}/java"/>
 	<property environment="env"/>
 	<property file="${src.ant}/config.properties"/>
-	<!-- property file="${src.ant}/config-${linux.flavour}.properties"/-->
 
 	<path id="modulesourcepath.main">
 		<pathelement path="${src.main.java}"/>
@@ -48,9 +49,13 @@
 		<pathelement path="${src.test.java}"/>
 	</path>
 
+	<!-- Import supplementary Ant projects -->
+    <import file="${src.ant}/install.ant"/>
+	<import file="${src.ant}/obs.ant"/>
+
 	<target name="resolve" description="Retrieve dependencies with Ivy">
 		<ivy:resolve conf="compile"/>
-		<ivy:cachepath pathid="modulepath.main.resolved" conf="compile"/>
+		<ivy:cachepath conf="compile" pathid="modulepath.main.resolved"/>
 	</target>
 
 	<target name="compile"
@@ -172,12 +177,13 @@
 			<length string="${git.stashname}" when="eq" length="0"/>
 		</condition>
 		<echo message="${git.object}"/>
+		<mkdir dir="${target}"/>
 		<exec executable="git">
 			<arg value="archive"/>
 			<arg value="--prefix"/>
 			<arg value="${project.name}-${project.version}/"/>
 			<arg value="--output"/>
-			<arg value="${target}/${project.name}-${project.version}.tar.gz"/>
+			<arg value="${target}/${project.name}-${project.version}.tar.xz"/>
 			<arg value="${git.object}"/>
 			<arg value="--"/>
 			<arg value="build.xml"/>
@@ -186,6 +192,8 @@
 			<arg value="README.md"/>
 			<arg value="LICENSE"/>
 			<arg value="AUTHORS"/>
+			<arg value="ivy.xml"/>
+			<arg value="ivysettings.xml"/>
 		</exec>
 	</target>
 

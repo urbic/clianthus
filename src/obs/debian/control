@@ -1,0 +1,32 @@
+Source: @obs.package.name@
+Section: contrib/interpreters
+Priority: optional
+Maintainer: @project.developer.name@ <@project.developer.email@>
+Build-Depends:
+	debhelper (>=10),
+	openjdk-11-jdk-headless,
+	openjdk-11-doc,
+	junit5,
+	ant-optional,
+	ivy-debian-helper
+Vcs-Git: @project.scm.url@.git
+Vcs-Browser: @project.scm.url@
+Homepage: @project.scm.url@
+
+Package: @obs.package.name@
+Architecture: all
+Depends:
+	debhelper (>=10),
+	openjdk-11-jre-headless,
+Suggests: @obs.package.name@-doc
+Description: @obs.package.summary@
+	@obs.package.description@
+
+Package: @obs.package.name@-doc
+Architecture: all
+Section: doc
+Depends: debhelper (>=10),
+Recommends:
+	openjdk-17-doc,
+Description: @obs.package.summary@
+	This package contains documentation for @obs.package.name@.

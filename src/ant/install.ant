@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project name="install" basedir=".">
+
+	<target name="install"
+		description="Install"
+		depends="artifacts"
+		>
+		<!-- Make directories -->
+		<mkdir dir="${destdir}/${config.javadir}"/>
+		<mkdir dir="${destdir}/${config.mavenpomsdir}"/>
+		<mkdir dir="${destdir}/${config.docdir.package}"/>
+		<mkdir dir="${destdir}/${config.licensedir.package}"/>
+
+		<!-- Install artifacts-->
+		<copy
+			tofile="${destdir}/${config.javadir}/${project.maven.groupId}.${project.maven.artifactId}.jar"
+			file="${target.artifacts.jar}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"
+			/>
+		<copy
+			tofile="${destdir}/${config.mavenpomsdir}/${project.maven.groupId}.${project.maven.artifactId}.pom"
+			file="${target.artifacts.pom}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.pom"
+			/>
+
+		<!-- Install LICENSE -->
+		<copy todir="${destdir}/${config.licensedir.package}" file="LICENSE"/>
+
+		<!-- Install README etc -->
+		<copy todir="${destdir}/${config.docdir.package}">
+			<fileset dir="." includes="README AUTHORS"/>
+		</copy>
+
+		<!-- Install API documentation -->
+		<copy todir="${destdir}/${config.javadocdir.package}">
+			<fileset dir="${target.doc.apidocs}" includes="**/*"/>
+		</copy>
+
+	</target>
+
+</project>
