@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="obs" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
+	<property name="obs.package.name" value="${project.name}"/>
 	<property name="obs.package.version" value="${project.version}"/>
 	<property name="obs.package.summary" value="${project.summary}"/>
 	<property name="obs.package.description" value="${project.description}"/>
