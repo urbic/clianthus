@@ -1,5 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: @obs.package.name@
+Upstream-Name: @project.name@
 Upstream-Contact: @project.developer.name@ <@project.developer.email@>
 Source: @project.scm.url@
 

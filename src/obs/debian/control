@@ -1,4 +1,4 @@
-Source: @obs.package.name@
+Source: lib@obs.package.name@-java
 Section: contrib/interpreters
 Priority: optional
 Maintainer: @project.developer.name@ <@project.developer.email@>
@@ -13,20 +13,20 @@ Vcs-Git: @project.scm.url@.git
 Vcs-Browser: @project.scm.url@
 Homepage: @project.scm.url@
 
-Package: @obs.package.name@
+Package: lib@obs.package.name@-java
 Architecture: all
 Depends:
 	debhelper (>=10),
 	openjdk-11-jre-headless,
-Suggests: @obs.package.name@-doc
+Suggests: lib@obs.package.name@-java-doc
 Description: @obs.package.summary@
 	@obs.package.description@
 
-Package: @obs.package.name@-doc
+Package: lib@obs.package.name@-java-doc
 Architecture: all
 Section: doc
 Depends: debhelper (>=10),
 Recommends:
 	openjdk-17-doc,
 Description: @obs.package.summary@
-	This package contains documentation for @obs.package.name@.
+	This package contains documentation for lib@obs.package.name@-java.

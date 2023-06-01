@@ -1,4 +1,4 @@
-usr/share/doc/@obs.package.name@/api/*
-usr/share/doc/@obs.package.name@/copyright
-usr/share/doc/@obs.package.name@/LICENSE
-usr/share/doc/@obs.package.name@/README
+usr/share/doc/lib@obs.package.name@-java/api/*
+usr/share/doc/lib@obs.package.name@-java/copyright
+usr/share/doc/lib@obs.package.name@-java/LICENSE
+usr/share/doc/lib@obs.package.name@-java/README
