@@ -11,19 +11,8 @@
 	<property name="obs.build.project" value="home:${obs.user}:coneforest"/>
 	<property name="src.obs" location="${src}/obs"/>
 	<condition
-		property="obs.package.name"
-		value="lib${project.name}-java"
-		else="${project.name}"
-		>
-		<or>
-			<contains string="${obs.build.distro}" substring="Debian"/>
-			<contains string="${obs.build.distro}" substring="Ubuntu"/>
-			<contains string="${obs.build.distro}" substring="Raspbian"/>
-		</or>
-	</condition>
-	<condition
 		property="obs.build.desc"
-		value="${obs.package.name}.dsc"
+		value="lib${obs.package.name}-java.dsc"
 		else="${obs.package.name}.spec"
 		>
 		<or>
