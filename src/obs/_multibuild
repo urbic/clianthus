@@ -1,0 +1,4 @@
+<multibuild>
+	<package>@obs.package.name@</package>
+	<package>lib@obs.package.name@-java</package>
+</multibuild>

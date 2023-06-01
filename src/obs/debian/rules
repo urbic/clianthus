@@ -19,9 +19,9 @@ build-stamp:
 		-Ddestdir=$(DESTDIR) \
 		-Divy.settings.file=/usr/share/ivy-debian-helper/ivysettings.xml \
 		-Divy.default.ivy.user.dir=$(shell pwd)/.ivy \
-		-Dconfig.docdir.package=/usr/share/doc/clianthus \
-		-Dconfig.licensedir.package=/usr/share/doc/clianthus \
-		-Dconfig.javadocdir.package=/usr/share/doc/clianthus/api \
+		-Dconfig.docdir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.licensedir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
 		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-11-doc/api \
 		build
 	# --- end custom part for compiling
@@ -62,12 +62,12 @@ install: build
 		-Ddestdir=$(DESTDIR) \
 		-Divy.settings.file=/usr/share/ivy-debian-helper/ivysettings.xml \
 		-Divy.default.ivy.user.dir=$(shell pwd)/.ivy \
-		-Dconfig.docdir.package=/usr/share/doc/clianthus \
-		-Dconfig.licensedir.package=/usr/share/doc/clianthus \
-		-Dconfig.javadocdir.package=/usr/share/doc/clianthus/api \
+		-Dconfig.docdir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.licensedir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
 		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-11-doc/api \
 		install
-	ln -s LICENSE $(DESTDIR)/usr/share/doc/clianthus/copyright
+	ln -s LICENSE $(DESTDIR)/usr/share/doc/libclianthus-java/copyright
 	dh_install
 	# --- end custom part for installing
 

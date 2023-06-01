@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="obs" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-	<property name="obs.package.name" value="${project.name}"/>
 	<property name="obs.package.version" value="${project.version}"/>
 	<property name="obs.package.summary" value="${project.summary}"/>
 	<property name="obs.package.description" value="${project.description}"/>
@@ -11,7 +10,22 @@
 	<property name="obs.user" value="${project.developer.id}"/>
 	<property name="obs.build.project" value="home:${obs.user}:coneforest"/>
 	<property name="src.obs" location="${src}/obs"/>
-	<condition property="obs.build.desc" value="${obs.package.name}.dsc" else="${obs.package.name}.spec">
+	<condition
+		property="obs.package.name"
+		value="lib${project.name}-java"
+		else="${project.name}"
+		>
+		<or>
+			<contains string="${obs.build.distro}" substring="Debian"/>
+			<contains string="${obs.build.distro}" substring="Ubuntu"/>
+			<contains string="${obs.build.distro}" substring="Raspbian"/>
+		</or>
+	</condition>
+	<condition
+		property="obs.build.desc"
+		value="${obs.package.name}.dsc"
+		else="${obs.package.name}.spec"
+		>
 		<or>
 			<contains string="${obs.build.distro}" substring="Debian"/>
 			<contains string="${obs.build.distro}" substring="Ubuntu"/>
@@ -26,12 +40,13 @@
 
 	<filterset id="obs.build.filterset">
 		<propertyset>
-			<propertyref name="obs.package.name"/>
-			<propertyref name="obs.package.version"/>
-			<propertyref name="obs.package.summary"/>
 			<propertyref name="obs.package.description"/>
-			<propertyref name="project.developer.name"/>
+			<propertyref name="obs.package.name"/>
+			<propertyref name="obs.package.summary"/>
+			<propertyref name="obs.package.version"/>
 			<propertyref name="project.developer.email"/>
+			<propertyref name="project.developer.name"/>
+			<propertyref name="project.name"/>
 			<propertyref name="project.scm.url"/>
 		</propertyset>
 	</filterset>
@@ -79,7 +94,7 @@ pass=
 			<fileset dir="${target}" includes="${project.name}-${project.version}.tar.xz"/>
 		</copy>
 		<copy todir="${target.obs}" filtering="true" overwrite="yes">
-			<fileset dir="${src.obs}" includes="${project.name}.*"/>
+			<fileset dir="${src.obs}" includes="*"/>
 			<filterset refid="obs.build.filterset"/>
 		</copy>
 		<copy todir="${target.obs}" filtering="true" overwrite="yes">
