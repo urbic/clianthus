@@ -67,6 +67,8 @@ install: build
 		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
 		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-11-doc/api \
 		install
+	mh_installpoms -plibclianthus-java
+	mh_linkjars
 	ln -s LICENSE $(DESTDIR)/usr/share/doc/libclianthus-java/copyright
 	dh_install
 	# --- end custom part for installing

@@ -11,7 +11,7 @@
 		<mkdir dir="${destdir}/${config.docdir.package}"/>
 		<mkdir dir="${destdir}/${config.licensedir.package}"/>
 
-		<!-- Install artifacts-->
+		<!-- Install artifacts -->
 		<copy
 			tofile="${destdir}/${config.javadir}/${project.maven.groupId}.${project.maven.artifactId}.jar"
 			file="${target.artifacts.jar}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"

@@ -166,7 +166,7 @@
 				charset="UTF-8"
 				windowtitle="${project.name} ${project.version}"
 				>
-			<module name="coneforest.${project.name}"/>
+			<module name="${project.maven.groupId}.${project.maven.artifactId}"/>
 			<modulepath refid="modulepath.main"/>
 			<arg value="-Xdoclint:missing,reference"/>
 			<link href="file://${datadir.javadoc.java}"/>
