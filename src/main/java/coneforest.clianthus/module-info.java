@@ -20,6 +20,4 @@ module coneforest.clianthus
 {
 	exports coneforest.clianthus.option;
 	exports coneforest.clianthus.processor;
-
-	requires org.junit.jupiter.api;
 }

@@ -37,16 +37,27 @@
 	<property file="${src.ant}/config.properties"/>
 
 	<path id="modulesourcepath.main">
-		<pathelement path="${src.main.java}"/>
+		<pathelement location="${src.main.java}"/>
 	</path>
 
 	<path id="modulepath.main">
 		<path refid="modulepath.main.resolved"/>
-		<pathelement path="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"/>
+		<pathelement
+			location="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"
+			/>
 	</path>
 
 	<path id="modulesourcepath.test">
-		<pathelement path="${src.test.java}"/>
+		<pathelement
+			location="${src.test.java}"
+			/>
+	</path>
+
+	<path id="modulepath.test">
+		<pathelement
+			location="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}.test"
+			/>
+		<path refid="modulepath.test.resolved"/>
 	</path>
 
 	<!-- Import supplementary Ant projects -->
@@ -56,6 +67,7 @@
 	<target name="resolve" description="Retrieve dependencies with Ivy">
 		<ivy:resolve conf="compile"/>
 		<ivy:cachepath conf="compile" pathid="modulepath.main.resolved"/>
+		<ivy:cachepath conf="test" pathid="modulepath.test.resolved"/>
 	</target>
 
 	<target name="compile"
@@ -78,13 +90,7 @@
 			>
 			<modulesourcepath refid="modulesourcepath.main"/>
 			<modulesourcepath refid="modulesourcepath.test"/>
-			<modulepath refid="modulepath.main"/>
-			<compilerarg
-				value="--add-exports=org.junit.jupiter.api/org.junit.jupiter.api.Assertions.assertEquals=ALL-UNNAMED"/>
-			<compilerarg
-				value="--add-exports=org.junit.jupiter.api/org.junit.jupiter.api=ALL-UNNAMED"/>
-			<!--compilerarg value="- -add-modules=org.junit.jupiter.api"/-->
-			<!-- modulepathref="modulepath.main" -->
+			<modulepath refid="modulepath.test"/>
 			<!--compilerarg value="-Xlint"/-->
 			<!--compilerarg value="-Xdoclint"/-->
 			<!--compilerarg value="-Xpkginfo:always"/-->
@@ -135,7 +141,6 @@
 		<jar
 			jarfile="${target.lib}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"
 			basedir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"
-			excludes="**/test/"
 			>
 		</jar>
 	</target>
@@ -206,8 +211,11 @@
 		<mkdir dir="${target.testreports}"/>
 		<junitlauncher haltOnFailure="true" printSummary="true">
 			<classpath refid="modulepath.main"/>
+			<classpath refid="modulepath.test"/>
 			<testclasses outputdir="${target.testreports}">
-				<fileset dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}">
+				<fileset
+					dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}.test"
+					>
 					<include name="**/Test*.class"/>
 				</fileset>
 				<listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>

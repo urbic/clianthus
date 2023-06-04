@@ -13,6 +13,7 @@
 
 	<configurations defaultconfmapping="*->default">
 		<conf name="compile"/>
+		<conf name="test"/>
 	</configurations>
 
 	<publications>
@@ -26,7 +27,7 @@
 			name="junit-jupiter-api"
 			rev="[5.8.2,)"
 			transitive="true"
-			conf="compile"
+			conf="test"
 			/>
 	</dependencies>
 
