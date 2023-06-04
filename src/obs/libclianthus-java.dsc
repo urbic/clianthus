@@ -20,4 +20,4 @@ Homepage: @project.scm.url@
 Debtransform-Tar: @project.name@-@obs.package.version@.tar.xz
 Files:
 	00000000000000000000000000000000 0 lib@obs.package.name@-java_@obs.package.version@.orig.tar.xz
-	00000000000000000000000000000000 0 lib@obs.package.name@-java_@obs.package.version@-0.diff.tar.xz
+	00000000000000000000000000000000 0 lib@obs.package.name@-java_@obs.package.version@-1.diff.tar.xz
