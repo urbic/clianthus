@@ -79,6 +79,11 @@
 			<modulesourcepath refid="modulesourcepath.main"/>
 			<modulesourcepath refid="modulesourcepath.test"/>
 			<modulepath refid="modulepath.main"/>
+			<compilerarg
+				value="--add-exports=org.junit.jupiter.api/org.junit.jupiter.api.Assertions.assertEquals=ALL-UNNAMED"/>
+			<compilerarg
+				value="--add-exports=org.junit.jupiter.api/org.junit.jupiter.api=ALL-UNNAMED"/>
+			<!--compilerarg value="- -add-modules=org.junit.jupiter.api"/-->
 			<!-- modulepathref="modulepath.main" -->
 			<!--compilerarg value="-Xlint"/-->
 			<!--compilerarg value="-Xdoclint"/-->

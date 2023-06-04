@@ -28,7 +28,6 @@ BuildRequires:  ivy-local
 BuildRequires:  java-devel >= 17
 BuildRequires:  java-javadoc >= 17
 BuildRequires:  javacc
-BuildRequires:  mvn(net.sf.docbook:docbook-xsl-saxon)
 BuildRequires:  mvn(org.apache.ant:ant-junitlauncher)
 BuildRequires:  mvn(org.junit.jupiter:junit-jupiter-api)
 Requires:       java-headless >= 17
