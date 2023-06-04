@@ -17,6 +17,7 @@ Build-Depends:
 Vcs-Git: @project.scm.url@.git
 Vcs-Browser: @project.scm.url@
 Homepage: @project.scm.url@
+Debtransform-Release: 1
 Debtransform-Tar: @project.name@-@obs.package.version@.tar.xz
 Files:
 	00000000000000000000000000000000 0 lib@obs.package.name@-java_@obs.package.version@.orig.tar.xz
