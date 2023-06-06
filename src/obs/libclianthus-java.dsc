@@ -12,8 +12,7 @@ Build-Depends:
 	ant-optional,
 	ivy-debian-helper,
 	libjline-java,
-	libjline-java-doc,
-	libxslthl-java
+	libjline-java-doc
 Vcs-Git: @project.scm.url@.git
 Vcs-Browser: @project.scm.url@
 Homepage: @project.scm.url@
