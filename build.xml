@@ -15,7 +15,6 @@
 	<property name="src.maven" location="${src}/maven"/>
 	<property name="target" location="target"/>
 	<property name="target.classes" location="${target}/classes"/>
-	<property name="target.lib" location="${target}/lib"/>
 	<property name="target.src" location="${target}/src"/>
 	<property name="target.src.test" location="${target.src}/test"/>
 	<property name="target.src.test.java" location="${target.src.test}/java"/>
@@ -43,7 +42,7 @@
 	<path id="modulepath.main">
 		<path refid="modulepath.main.resolved"/>
 		<pathelement
-			location="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"
+			location="${target.classes}/${project.moduleprefix}"
 			/>
 	</path>
 
@@ -55,7 +54,7 @@
 
 	<path id="modulepath.test">
 		<pathelement
-			location="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}.test"
+			location="${target.classes}/${project.moduleprefix}.test"
 			/>
 		<path refid="modulepath.test.resolved"/>
 	</path>
@@ -79,8 +78,7 @@
 			description="Compile Java sources"
 			depends="resolve"
 			>
-		<mkdir
-		dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"/>
+		<mkdir dir="${target.classes}/${project.moduleprefix}"/>
 		<javac
 			destdir="${target.classes}"
 			release="11"
@@ -103,17 +101,17 @@
 			<fileset dir="${src.main.resources}" includes="**"/>
 		</copy>
 		<mkdir
-            dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/licenses"
+            dir="${target.classes}/${project.moduleprefix}/META-INF/licenses"
             />
 		<copy
-			todir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/licenses"
+			todir="${target.classes}/${project.moduleprefix}/META-INF/licenses"
 			file="LICENSE"
 			/>
 		<mkdir
-            dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}"
+            dir="${target.classes}/${project.moduleprefix}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}"
             />
         <echoproperties
-            destfile="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}/pom.properties"
+            destfile="${target.classes}/${project.moduleprefix}/META-INF/maven/${project.maven.groupId}/${project.maven.artifactId}/pom.properties"
             >
             <propertyset>
 				<propertyref prefix="project.maven."/>
@@ -125,11 +123,10 @@
 	<target name="pom"
 		description="Generate POM"
 		>
-		<mkdir dir="${target.lib}"/>
 		<ivy:makepom
 			ivyfile="ivy.xml"
-			templatefile="${src.maven}/${project.maven.groupId}.${project.maven.artifactId}.pom"
-			pomfile="${target.lib}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.pom"
+			templatefile="${src.maven}/${project.moduleprefix}.pom"
+			pomfile="${target.artifacts}/pom/${project.moduleprefix}-${project.version}.pom"
 			>                                  
 			<ivy:mapping conf="default" scope="compile"/>
 		</ivy:makepom>
@@ -139,8 +136,8 @@
 		description="Build Jar"
 		depends="compile,copy.resources">
 		<jar
-			jarfile="${target.lib}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"
-			basedir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}"
+			jarfile="${target.artifacts}/jar/${project.moduleprefix}-${project.version}.jar"
+            basedir="${target.classes}/${project.moduleprefix}"
 			>
 		</jar>
 	</target>
@@ -171,7 +168,7 @@
 				charset="UTF-8"
 				windowtitle="${project.name} ${project.version}"
 				>
-			<module name="${project.maven.groupId}.${project.maven.artifactId}"/>
+			<module name="${project.moduleprefix}"/>
 			<modulepath refid="modulepath.main"/>
 			<arg value="-Xdoclint:missing,reference"/>
 			<link href="file://${datadir.javadoc.java}"/>
@@ -214,7 +211,7 @@
 			<classpath refid="modulepath.test"/>
 			<testclasses outputdir="${target.testreports}">
 				<fileset
-					dir="${target.classes}/${project.maven.groupId}.${project.maven.artifactId}.test"
+					dir="${target.classes}/${project.moduleprefix}.test"
 					>
 					<include name="**/Test*.class"/>
 				</fileset>
@@ -224,16 +221,10 @@
         </junitlauncher>
 	</target>
 
-	<target name="artifacts" depends="jar,pom">
-		<mkdir dir="${target.artifacts}/jar"/>
-		<copy todir="${target.artifacts}/jar">
-			<fileset dir="${target.lib}" includes="*.jar"/>
-		</copy>
-		<mkdir dir="${target.artifacts}/pom"/>
-		<copy todir="${target.artifacts}/pom">
-			<fileset dir="${target.lib}" includes="*.pom"/>
-		</copy>
-	</target>
+	<target name="artifacts"
+		description="Build artifacts"
+		depends="jar,pom"
+		/>
 
 	<target name="deploy" depends="artifacts">
 		<ivy:publish

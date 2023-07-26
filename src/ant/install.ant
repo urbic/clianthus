@@ -13,12 +13,12 @@
 
 		<!-- Install artifacts -->
 		<copy
-			tofile="${destdir}/${config.javadir}/${project.maven.groupId}.${project.maven.artifactId}.jar"
-			file="${target.artifacts.jar}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.jar"
+			tofile="${destdir}/${config.javadir}/${project.moduleprefix}.jar"
+			file="${target.artifacts.jar}/${project.moduleprefix}-${project.version}.jar"
 			/>
 		<copy
-			tofile="${destdir}/${config.mavenpomsdir}/${project.maven.groupId}.${project.maven.artifactId}.pom"
-			file="${target.artifacts.pom}/${project.maven.groupId}.${project.maven.artifactId}-${project.version}.pom"
+			tofile="${destdir}/${config.mavenpomsdir}/${project.moduleprefix}.pom"
+			file="${target.artifacts.pom}/${project.moduleprefix}-${project.version}.pom"
 			/>
 
 		<!-- Install LICENSE -->
