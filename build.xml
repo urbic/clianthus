@@ -38,7 +38,9 @@
 	<property name="java.release" value="11"/>
 	<property name="linux.flavour" value="redhat"/>
 	<property environment="env"/>
+
 	<property file="${src.ant}/config.properties"/>
+	<property file="${src.ant}/config-${linux.flavour}.properties"/>
 
 	<path id="modulesourcepath.main">
 		<pathelement location="${src.main.java}"/>
@@ -178,7 +180,7 @@
 			<modulepath refid="modulepath.main"/>
 			<classpath refid="classpath.main"/>
 			<arg value="-Xdoclint:missing,reference"/>
-			<link href="file://${datadir.javadoc.java}"/>
+			<link href="file://${config.javadocdir.java}"/>
 			<arg value="--add-reads=${project.moduleprefix}=ALL-UNNAMED"/>
 			<arg value="--add-reads=${project.moduleprefix}.test=ALL-UNNAMED"/>
 		</javadoc>

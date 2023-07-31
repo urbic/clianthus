@@ -31,11 +31,20 @@ build-stamp:
 		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
 		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-17-doc/api \
 		-Dlinux.flavour=debian \
-		build \
-	# --- end custom part for compiling
+		build
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	ant -v \
+		-Ddestdir=$(DESTDIR) \
+		-Divy.settings.file=/usr/share/ivy-debian-helper/ivysettings.xml \
+		-Divy.default.ivy.user.dir=$(shell pwd)/.ivy \
+		-Dconfig.docdir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.licensedir.package=/usr/share/doc/libclianthus-java \
+		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
+		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-17-doc/api \
+		-Dlinux.flavour=debian \
 		test
 endif
+	# --- end custom part for compiling
 
 	touch build-stamp
 
