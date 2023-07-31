@@ -8,11 +8,13 @@ export DH_COMPAT=10
 export LC_ALL:=C.UTF-8
 export
 CLASSPATH:=/usr/share/java/ivy.jar
-	
-ifeq ($(shell lsb_release -is),Debian)
+
+# TODO: checks disabled because current Debian/Raspbian 11 does not properly
+# package ant-optional (missing ant-junitlauncher.jar)
 ifeq ($(shell lsb_release -rs),11)
-# TODO: checks disabled because current Debian 11 does not properly package
-# ant-optional (missing ant-junitlauncher.jar)
+ifeq ($(shell lsb_release -is),Debian)
+DEB_BUILD_OPTIONS=nocheck
+else ifeq ($(shell lsb_release -is),Raspbian)
 DEB_BUILD_OPTIONS=nocheck
 endif
 endif
