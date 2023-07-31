@@ -7,8 +7,15 @@ export DH_COMPAT=10
 
 export LC_ALL:=C.UTF-8
 export
-CLASSPATH:=/usr/share/java/xercesImpl.jar:/usr/share/java/ivy.jar:/usr/share/java/junit.jar
-
+CLASSPATH:=/usr/share/java/ivy.jar
+	
+ifeq ($(shell lsb_release -is),Debian)
+ifeq ($(shell lsb_release -rs),11)
+# TODO: checks disabled because current Debian 11 does not properly package
+# ant-optional (missing ant-junitlauncher.jar)
+DEB_BUILD_OPTIONS=nocheck
+endif
+endif
 
 build: build-stamp
 build-stamp:
@@ -22,17 +29,12 @@ build-stamp:
 		-Dconfig.docdir.package=/usr/share/doc/libclianthus-java \
 		-Dconfig.licensedir.package=/usr/share/doc/libclianthus-java \
 		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
-		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-11-doc/api \
-		build
+		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-17-doc/api \
+		-Dlinux.flavour=debian \
+		build \
 	# --- end custom part for compiling
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	#dh_auto_test -- -v
-	# TODO: disabled because current Debian does not properly package
-	# ant-optional (missing ant-junitlauncher.jar)
-	#ant -v \
-	#	-Divy.settings.file=/usr/share/ivy-debian-helper/ivysettings.xml \
-	#	-Divy.default.ivy.user.dir=$(shell pwd)/.ivy \
-	#	test
+		test
 endif
 
 	touch build-stamp
@@ -66,6 +68,7 @@ install: build
 		-Dconfig.licensedir.package=/usr/share/doc/libclianthus-java \
 		-Dconfig.javadocdir.package=/usr/share/doc/libclianthus-java/api \
 		-Dconfig.javadocdir.java=/usr/share/doc/openjdk-11-doc/api \
+		-Dlinux.flavour=debian \
 		install
 	mh_installpoms -plibclianthus-java
 	mh_linkjars

@@ -6,13 +6,14 @@ Maintainer: @project.developer.name@ <@project.developer.email@>
 Architecture: all
 Build-Depends:
 	debhelper (>=10),
-	openjdk-11-jdk-headless,
-	openjdk-11-doc,
+	openjdk-17-jdk-headless,
+	openjdk-17-doc,
 	junit5,
 	ant-optional,
 	ivy-debian-helper,
 	libjline-java,
-	libjline-java-doc
+	libjline-java-doc,
+	lsb-release
 Vcs-Git: @project.scm.url@.git
 Vcs-Browser: @project.scm.url@
 Homepage: @project.scm.url@

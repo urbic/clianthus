@@ -4,11 +4,12 @@ Priority: optional
 Maintainer: @project.developer.name@ <@project.developer.email@>
 Build-Depends:
 	debhelper (>=10),
-	openjdk-11-jdk-headless,
-	openjdk-11-doc,
+	openjdk-17-jdk-headless,
+	openjdk-17-doc,
 	junit5,
 	ant-optional,
-	ivy-debian-helper
+	ivy-debian-helper,
+	lsb-release
 Vcs-Git: @project.scm.url@.git
 Vcs-Browser: @project.scm.url@
 Homepage: @project.scm.url@
@@ -17,7 +18,7 @@ Package: lib@obs.package.name@-java
 Architecture: all
 Depends:
 	debhelper (>=10),
-	openjdk-11-jre-headless,
+	openjdk-17-jre-headless,
 Suggests: lib@obs.package.name@-java-doc
 Description: @obs.package.summary@
 	@obs.package.description@

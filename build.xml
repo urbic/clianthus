@@ -5,6 +5,9 @@
 	xmlns:ivy="antlib:org.apache.ivy.ant"
 	>
 
+	<description>${project.description}</description>
+
+	<!-- Properties -->
 	<property name="src" location="src"/>
 	<property name="src.ant" location="${src}/ant"/>
 	<property name="src.main" location="${src}/main"/>
@@ -32,6 +35,7 @@
 	<property name="datadir.java" location="${datadir}/java"/>
 	<property name="datadir.javadoc" location="${datadir}/javadoc"/>
 	<property name="datadir.javadoc.java" location="${datadir.javadoc}/java"/>
+	<property name="java.release" value="11"/>
 	<property environment="env"/>
 	<property file="${src.ant}/config.properties"/>
 
@@ -41,9 +45,14 @@
 
 	<path id="modulepath.main">
 		<path refid="modulepath.main.resolved"/>
-		<pathelement
-			location="${target.classes}/${project.moduleprefix}"
+		<dirset
+			dir="${target.classes}"
+			includes="${project.moduleprefix}*"
 			/>
+	</path>
+
+	<path id="classpath.main">
+		<path refid="classpath.main.resolved"/>
 	</path>
 
 	<path id="modulesourcepath.test">
@@ -52,21 +61,12 @@
 			/>
 	</path>
 
-	<path id="modulepath.test">
-		<pathelement
-			location="${target.classes}/${project.moduleprefix}.test"
-			/>
-		<path refid="modulepath.test.resolved"/>
-	</path>
-
 	<!-- Import supplementary Ant projects -->
     <import file="${src.ant}/install.ant"/>
 	<import file="${src.ant}/obs.ant"/>
 
 	<target name="resolve" description="Retrieve dependencies with Ivy">
-		<ivy:resolve conf="compile"/>
-		<ivy:cachepath conf="compile" pathid="modulepath.main.resolved"/>
-		<ivy:cachepath conf="test" pathid="modulepath.test.resolved"/>
+		<ivy:resolve conf="compile,linux.${linux.flavour}"/>
 	</target>
 
 	<target name="compile"
@@ -75,24 +75,29 @@
 		/>
 
 	<target name="compile.java"
-			description="Compile Java sources"
-			depends="resolve"
-			>
-		<mkdir dir="${target.classes}/${project.moduleprefix}"/>
+		description="Compile Java sources"
+		depends="resolve"
+		>
+		<ivy:cachepath conf="compile+classpath" pathid="classpath.main.resolved"/>
+		<ivy:cachepath conf="compile+modulepath" pathid="modulepath.main.resolved"/>
+		<mkdir dir="${target.classes}"/>
 		<javac
 			destdir="${target.classes}"
-			release="11"
+			release="${java.release}"
 			includeantruntime="false"
 			encoding="UTF-8"
 			createMissingPackageInfoClass="false"
 			>
 			<modulesourcepath refid="modulesourcepath.main"/>
 			<modulesourcepath refid="modulesourcepath.test"/>
-			<modulepath refid="modulepath.test"/>
+			<modulepath refid="modulepath.main"/>
+			<classpath refid="classpath.main"/>
 			<!--compilerarg value="-Xlint"/-->
 			<!--compilerarg value="-Xdoclint"/-->
 			<!--compilerarg value="-Xpkginfo:always"/-->
 			<compilerarg value="-Xdiags:verbose"/>
+			<compilerarg value="--add-reads=${project.moduleprefix}=ALL-UNNAMED"/>
+			<compilerarg value="--add-reads=${project.moduleprefix}.test=ALL-UNNAMED"/>
 		</javac>
 	</target>
 
@@ -170,8 +175,11 @@
 				>
 			<module name="${project.moduleprefix}"/>
 			<modulepath refid="modulepath.main"/>
+			<classpath refid="classpath.main"/>
 			<arg value="-Xdoclint:missing,reference"/>
 			<link href="file://${datadir.javadoc.java}"/>
+			<arg value="--add-reads=${project.moduleprefix}=ALL-UNNAMED"/>
+			<arg value="--add-reads=${project.moduleprefix}.test=ALL-UNNAMED"/>
 		</javadoc>
 	</target>
 	
@@ -208,7 +216,7 @@
 		<mkdir dir="${target.testreports}"/>
 		<junitlauncher haltOnFailure="true" printSummary="true">
 			<classpath refid="modulepath.main"/>
-			<classpath refid="modulepath.test"/>
+			<classpath refid="classpath.main"/>
 			<testclasses outputdir="${target.testreports}">
 				<fileset
 					dir="${target.classes}/${project.moduleprefix}.test"
