@@ -36,6 +36,7 @@
 	<property name="datadir.javadoc" location="${datadir}/javadoc"/>
 	<property name="datadir.javadoc.java" location="${datadir.javadoc}/java"/>
 	<property name="java.release" value="11"/>
+	<property name="linux.flavour" value="redhat"/>
 	<property environment="env"/>
 	<property file="${src.ant}/config.properties"/>
 
