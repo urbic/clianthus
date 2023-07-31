@@ -34,6 +34,7 @@ jobs:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
         run: |
           ant -lib /usr/share/java/ivy.jar \
+            -Dlinux.flavour=debian \
             -v -noinput build
 # Test disabled because Ubintu 22.04 does not provide ant-junitlauncher.jar
 #      - name: Test
